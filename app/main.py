@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from sqlalchemy import text
-from db import engine
+from app.db import engine
 
 app = FastAPI(title="Project Service")
 
