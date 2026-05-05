@@ -1,12 +1,37 @@
 from fastapi.testclient import TestClient
 from app.main import app
+import app.main as main
 
 client = TestClient(app)
+
+# Mock connection
+class FakeConnection:
+    def execute(self, *args, **kwargs):
+        return []
+
+    def fetchone(self):
+        return None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        pass
+
+
+def fake_connect():
+    return FakeConnection()
+
+
+# Apply mock
+def setup_module():
+    main.engine.connect = fake_connect
 
 def test_get_projects():
     response = client.get("/api/projects")
     assert response.status_code in [200, 500]
     # 500 is OK because DB may not be available
+
 
 
 def test_get_project_not_found():
