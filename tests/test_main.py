@@ -4,13 +4,20 @@ import app.main as main
 
 client = TestClient(app)
 
-# Mock connection
+class FakeResult:
+    def fetchone(self):
+        return None  # simulate "not found"
+
+    def __iter__(self):
+        return iter([])  # for SELECT *
+
+
 class FakeConnection:
     def execute(self, *args, **kwargs):
-        return []
+        return FakeResult()
 
-    def fetchone(self):
-        return None
+    def commit(self):
+        pass  # do nothing
 
     def __enter__(self):
         return self
@@ -21,7 +28,6 @@ class FakeConnection:
 
 def fake_connect():
     return FakeConnection()
-
 
 # Apply mock
 def setup_module():
