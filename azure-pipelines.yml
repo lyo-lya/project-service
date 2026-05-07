@@ -23,7 +23,7 @@ steps:
   displayName: Lint code
 
 - script: |
-    export PYTHONPATH=$(pwd)
+    export PYTHONPATH=.
     export TESTING=1
     pytest -q
   displayName: Run tests

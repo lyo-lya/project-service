@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from sqlalchemy import text
 from app.db import engine
 
@@ -29,9 +29,12 @@ def get_project(id: int):
     with engine.connect() as conn:
         result = conn.execute(query, {"id": id}).fetchone()
 
-    return dict(result._mapping) if result else {"error": "Not found"}
+    if not result:
+        raise HTTPException(status_code=404, detail="Not found")
 
-@app.post("/api/projects")
+    return dict(result._mapping)
+
+@app.post("/api/projects", status_code=201)
 def create_project(project: dict):
     """
     {
