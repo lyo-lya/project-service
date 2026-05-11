@@ -7,4 +7,5 @@ azure-servicebus
 pytest
 httpx
 flake8
+pymssql
 
